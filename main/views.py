@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect
-from .models import Book_Author, Book_Publisher, Library_Branch, Book, Borrower
+from .models import *
+from django.utils import timezone
 
 # Create your views here.
 
 def default(request):
     return render(request, 'index.html')
+
+def borrow(request):
+    return render(request, 'borrow.html')
 
 def add_data(request):
     if request.method == 'POST':
@@ -68,3 +72,59 @@ def add_data(request):
             'branches': branches,
         }
         return render(request, 'add_data.html', context)
+
+def add_book(request):
+    if request.method == 'POST':
+        title = request.POST.get('title')
+        author_id = request.POST.get('author')
+        new_author_name = request.POST.get('new_author')
+        publisher_id = request.POST.get('publisher_name')
+        new_publisher_name = request.POST.get('new_publisher_name')
+        new_publisher_number = request.POST.get('new_publisher_number')
+        new_publisher_address = request.POST.get('new_publisher_address')
+        branch_id = request.POST.get('branch')
+        new_branch_name = request.POST.get('new_branch')
+        new_location = request.POST.get('new_location')
+        num_copies = request.POST.get('num_copies')
+
+        # Check if the author already exists or create a new one
+        if author_id:
+            author = Book_Author.objects.get(id=author_id)
+        elif new_author_name:
+            author = Book_Author.objects.create(author_name=new_author_name)
+        else:
+            return redirect('add_book')
+
+        # Check if the publisher already exists or create a new one
+        if publisher_id:
+            publisher = Book_Publisher.objects.get(id=publisher_id)
+        elif new_publisher_name:
+            publisher = Book_Publisher.objects.create(publisher_name=new_publisher_name,
+                                                      publisher_number=new_publisher_number,
+                                                      pubilsher_address=new_publisher_address)
+        else:
+            return redirect('add_book')
+
+        # Check if the branch already exists or create a new one
+        if branch_id:
+            branch = Library_Branch.objects.get(id=branch_id)
+        elif new_branch_name:
+            branch = Library_Branch.objects.create(branch_name=new_branch_name,
+                                                   location=new_location)
+        else:
+            return redirect('add_book')
+
+        # Create the book record
+        book = Book.objects.create(title=title,
+                                   author=author,
+                                   publisher=publisher,
+                                   branch=branch,
+                                   publisher_year=timezone.now().year,
+                                   num_copies=num_copies)
+        return redirect('add_book.html')
+
+    # If it's a GET request, render the form
+    authors = Book_Author.objects.all()
+    publishers = Book_Publisher.objects.all()
+    branches = Library_Branch.objects.all()
+    return render(request, 'add_book.html', {'authors': authors, 'publishers': publishers, 'branches': branches})

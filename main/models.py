@@ -19,7 +19,7 @@ class Book_Publisher(models.Model):
             MinValueValidator(6000000000)
         ]
     )
-    pubilsher_address = models.CharField(max_length=60, default='Unknown')
+    pubilsher_address = models.CharField(max_length=150, default='Unknown')
 
     def __str__(self):
         return self.publisher_name
@@ -36,7 +36,7 @@ class Book(models.Model):
     author = models.ForeignKey(Book_Author, on_delete=models.CASCADE)
     publisher = models.ForeignKey(Book_Publisher, on_delete=models.CASCADE)
     branch = models.ForeignKey(Library_Branch, on_delete=models.CASCADE)
-    publisher_year = models.PositiveIntegerField(
+    published_year = models.PositiveIntegerField(
         default=timezone.now().year,
         validators=[
             MaxValueValidator(2024),

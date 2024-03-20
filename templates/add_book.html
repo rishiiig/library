@@ -6,18 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <title>Data</title>
+    <title>Book</title>
 </head>
 
 <body>
-    <h1>Add Data</h1><!--  ayan give some new name for this -->
+    <h1>Add Book</h1>
 
     <div class="container">
         <form method="post">
             {% csrf_token %}
 
+            <!-- Add Book -->
+            <label for="title">Book Title:</label>
+            <input type="text" name="title" placeholder="Book Title"> <br> <br>
+
             <!-- Add Author -->
-            <label for="author">Author:</label>
+            <label for="author">Book Author:</label>
             <select name="author" id="author">
                 <option value="">-- Select or Add New --</option>
                 {% for author in authors %}
@@ -27,22 +31,6 @@
             <input type="text" name="new_author" placeholder="Add New Author"> <br> <br>
 
             <!-- Add Publisher -->
-            <!-- <label for="publisher_name">Publisher Name:</label>
-            <select name="publisher_name" id="publisher_name">
-                <option value="">-- Select or Add New --</option>
-                {% for publisher in publishers %}
-                <option value="{{ publisher.id }}">{{ publisher.publisher_name }}</option>
-                {% endfor %}
-            </select>
-            <input type="text" name="new_publisher_name" placeholder="New Publisher Name"> <br> <br>
-
-            <label for="publisher">Publisher Number:</label>
-
-            <input type="number" name="new_publisher_number" placeholder="New Publisher Number"> <br> <br>
-
-            <label for="publisher">Publisher Address:</label>
-            <input type="number" name="new_publisher_address" placeholder="New Publisher Address"> <br> <br> -->
-
             <label for="publisher_name">Publisher Name:</label>
             <select name="publisher_name" id="publisher_name">
                 <option value="">-- Select or Add New --</option>
@@ -73,25 +61,9 @@
             <input type="text" name="new_branch" placeholder="Add New Branch">
             <input type="text" name="new_location" placeholder="Add New Location"> <br> <br>
 
-            <!-- Add Book -->
-            <label for="book_title">Book Title:</label>
-            <input type="text" name="book_title"> <br> <br>
-
-            <!-- Add Borrower -->
-            <label for="borrower_name">Borrower Name:</label>
-            <input type="text" name="borrower_name"> <br> <br>
-
-            <!-- Add Contact Info -->
-            <label for="contact_info">Contact Info:</label>
-            <input type="text" name="contact_info"> <br> <br>
-
-            <!-- Add Loan Date -->
-            <label for="loan_date">Loan Date:</label>
-            <input type="date" name="loan_date"> <br> <br>
-
-            <!-- Add Return Date -->
-            <label for="return_date">Return Date:</label>
-            <input type="date" name="return_date"> <br> <br>
+            <!-- Add Copies -->
+            <label for="num_copies">Number of Copies:</label>
+            <input type="number" name="num_copies" placeholder="Number of Copies"> <br> <br>
 
             <button type="submit">Submit</button>
         </form>

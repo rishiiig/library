@@ -44,11 +44,19 @@
 
     </div>
 
-    <button onclick="redirectToPage()">Go to Another Page</button>
+    <button onclick="redirectToPage()">Basic / Not necessary page</button>
+    <button onclick="redirectToPage2()">Go to Book Page</button>
+    <button onclick="redirectToPage3()">Lend Book</button>
 
     <script>
         function redirectToPage() {
             window.location.href = "{% url 'add_data' %}";
+        }
+        function redirectToPage2() {
+            window.location.href = "{% url 'add_book' %}";
+        }
+        function redirectToPage3() {
+            window.location.href = "{% url 'borrow' %}";
         }
     </script>
 

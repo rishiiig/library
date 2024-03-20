@@ -21,5 +21,7 @@ from main.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', default, name='default'),
-    path('add_data/', add_data, name='add_data')
+    path('add_data/', add_data, name='add_data'),
+    path('add_book/', add_book, name='add_book'),
+    path('borrow/', borrow, name='borrow')
 ]
