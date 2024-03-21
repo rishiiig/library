@@ -1,11 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+    <title>Book Lending</title>
 </head>
+
 <body>
-    
+    <h1>Lend a Book</h1>
+    <div class="container">
+        <form method="post">
+            {% csrf_token %}
+
+            <label for="branch">Branch:</label>
+            <select name="branch" id="branch">
+                <option value="">-- Select --</option>
+                {% for branch in branches %}
+                <option value="{{ branch.id }}">{{ branch.branch_name }}</option>
+                {% endfor %}
+            </select> <br> <br>
+
+            <label for="book">Book Title:</label>
+            <select name="book" id="book">
+                <!-- Books dropdown options will be populated dynamically using JavaScript -->
+            </select><br><br>
+
+            <label for="borrower_name">Borrower Name:</label>
+            <input type="text" id="borrower_name" name="borrower_name" required><br><br>
+
+            <label for="borrower_number">Borrower Number:</label>
+            <input type="number" id="borrower_number" name="borrower_number" required><br><br>
+
+            <label for="loan_date">Loan Date:</label>
+            <input type="date" id="loan_date" name="loan_date" required><br><br>
+
+            <label for="return_date">Return Date:</label>
+            <input type="date" id="return_date" name="return_date"><br><br>
+
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <script>
+        const branchSelect = document.getElementById('branch');
+        const bookSelect = document.getElementById('book');
+
+        branchSelect.addEventListener('change', () => {
+            const branchId = branchSelect.value;
+            fetch(`/get_books/?branch_id=${branchId}`)
+                .then(response => response.json())
+                .then(data => {
+                    bookSelect.innerHTML = '';
+                    data.forEach(book => {
+                        const option = document.createElement('option');
+                        option.value = book.id;
+                        option.textContent = book.title;
+                        bookSelect.appendChild(option);
+                    });
+                });
+        });
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
+
 </html>

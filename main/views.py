@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from .models import *
 from django.utils import timezone
+from django.http import JsonResponse
 
 # Create your views here.
 
@@ -127,6 +128,61 @@ def add_book(request):
 
     return render(request, 'add_book.html', {'authors': authors, 'publishers': publishers, 'branches': branches})
 
+def borrow(request):
+    if request.method == 'POST':
+        branch_id = request.POST.get('branch')
+        book_id = request.POST.get('book')
+        borrower_name = request.POST.get('borrower_name')
+        borrower_number = request.POST.get('borrower_number')
+        loan_date = request.POST.get('loan_date')
+        return_date = request.POST.get('return_date')
+
+        book = Book.objects.get(pk=book_id)
+        
+        borrower = Borrower.objects.create(
+            borrower_name=borrower_name,
+            borrower_number=borrower_number,
+            loan_date=loan_date,
+            return_date=return_date,
+            book=book
+        )
+        borrower.save()
+        
+        return redirect('borrow')
+
+    else:
+        branches = Library_Branch.objects.all()
+        return render(request, 'borrow.html', {'branches': branches})
+
+def lend_book(request):
+    if request.method == 'POST':
+        branch_id = request.POST.get('branch')
+        book_id = request.POST.get('book')
+        borrower_name = request.POST.get('borrower_name')
+        borrower_number = request.POST.get('borrower_number')
+        loan_date = request.POST.get('loan_date')
+        return_date = request.POST.get('return_date')
+
+        book = Book.objects.get(pk=book_id)
+        
+        borrower = Borrower.objects.create(
+            borrower_name=borrower_name,
+            borrower_number=borrower_number,
+            loan_date=loan_date,
+            return_date=return_date,
+            book=book
+        )
+        borrower.save()
+        
+        return redirect('lend_book')  # Redirect to the lending page after submission
+    else:
+        branches = Library_Branch.objects.all()
+        return render(request, 'lend_book.html', {'branches': branches})
+
+def get_books(request):
+    branch_id = request.GET.get('branch_id')
+    books = Book.objects.filter(branch_id=branch_id).values('id', 'title')
+    return JsonResponse(list(books), safe=False)
 
 
 
