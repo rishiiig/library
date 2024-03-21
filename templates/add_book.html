@@ -25,18 +25,19 @@
             <select name="author" id="author">
                 <option value="">-- Select or Add New --</option>
                 {% for author in authors %}
-                <option value="{{ author.id }}">{{ author.author_name }}</option>
+                <option value="{{ author.id }}" data-author_name="{{ author.author_name }}">{{ author.author_name }}</option>
                 {% endfor %}
             </select>
-            <input type="text" name="new_author" placeholder="Add New Author"> <br> <br>
+            <input type="text" name="new_author" id="new_author" placeholder="Add New Author"> <br> <br>
 
             <!-- Add Publisher -->
             <label for="publisher_name">Publisher Name:</label>
             <select name="publisher_name" id="publisher_name">
                 <option value="">-- Select or Add New --</option>
                 {% for publisher in publishers %}
-                <option value="{{ publisher.id }}" data-number="{{ publisher.publisher_number }}"
-                    data-address="{{ publisher.pubilsher_address }}">{{ publisher.publisher_name }}</option>
+                <option value="{{ publisher.id }}" data-name="{{ publisher.publisher_name }}"
+                    data-number="{{ publisher.publisher_number }}" data-address="{{ publisher.pubilsher_address }}">
+                    {{ publisher.publisher_name }}</option>
                 {% endfor %}
             </select>
             <input type="text" name="new_publisher_name" id="new_publisher_name" placeholder="New Publisher Name"> <br>
@@ -55,11 +56,15 @@
             <select name="branch" id="branch">
                 <option value="">-- Select or Add New --</option>
                 {% for branch in branches %}
-                <option value="{{ branch.id }}">{{ branch.branch_name }} - {{ branch.location }}</option>
+                <option value="{{ branch.id }}" data-branch_name="{{ branch.branch_name }}" data-location="{{ branch.location }}">{{ branch.branch_name }}</option>
                 {% endfor %}
             </select>
-            <input type="text" name="new_branch" placeholder="Add New Branch">
-            <input type="text" name="new_location" placeholder="Add New Location"> <br> <br>
+            <input type="text" name="new_branch" id="new_branch" placeholder="Add New Branch">
+            <input type="text" name="new_location" id="new_location" placeholder="Add New Location"> <br> <br>
+
+            <!-- Add Published Year-->
+            <label for="published_year">Published Year:</label>
+            <input type="number" name="published_year" id="published_year" placeholder="Year"> <br> <br>
 
             <!-- Add Copies -->
             <label for="num_copies">Number of Copies:</label>
@@ -70,8 +75,23 @@
     </div>
 
     <script>
+        document.getElementById('author').addEventListener('change', function () {
+            var selectedOption = this.options[this.selectedIndex];
+            var author_name = selectedOption.getAttribute('data-author_name');
+            var newAuthorInput = document.getElementById('new_author');
+
+            newAuthorInput.readOnly = true;
+
+            if (selectedOption.value === "") {
+                newAuthorInput.readOnly = false;
+            } else {
+                newAuthorInput.value = author_name;
+            }
+        });
+
         document.getElementById('publisher_name').addEventListener('change', function () {
             var selectedOption = this.options[this.selectedIndex];
+            var name = selectedOption.getAttribute('data-name');
             var number = selectedOption.getAttribute('data-number');
             var address = selectedOption.getAttribute('data-address');
             var newPublisherNameInput = document.getElementById('new_publisher_name');
@@ -87,9 +107,28 @@
                 newPublisherNumberInput.readOnly = false;
                 newPublisherAddressInput.readOnly = false;
             } else {
-                newPublisherNameInput.value = "";
+                newPublisherNameInput.value = name;
                 newPublisherNumberInput.value = number;
                 newPublisherAddressInput.value = address;
+            }
+        });
+
+        document.getElementById('branch').addEventListener('change', function () {
+            var selectedOption = this.options[this.selectedIndex];
+            var branch_name = selectedOption.getAttribute('data-branch_name');
+            var location = selectedOption.getAttribute('data-location');
+            var newBranchInput = document.getElementById('new_branch');
+            var newLocationInput = document.getElementById('new_location');
+
+            newBranchInput.readOnly = true;
+            newLocationInput.readOnly = true;
+
+            if (selectedOption.value === "") {
+                newBranchInput.readOnly = false;
+                newLocationInput.readOnly = false;
+            } else {
+                newBranchInput.value = branch_name;
+                newLocationInput.value = location;
             }
         });
     </script>

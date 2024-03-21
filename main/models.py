@@ -40,7 +40,7 @@ class Book(models.Model):
         default=timezone.now().year,
         validators=[
             MaxValueValidator(2024),
-            MinValueValidator(1990)
+            MinValueValidator(1950)
         ]
     )
     num_copies = models.IntegerField(default=1, validators=[MinValueValidator(0)])
