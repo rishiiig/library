@@ -60,6 +60,7 @@ class Borrower(models.Model):
     loan_date = models.DateField()
     return_date = models.DateField(null=True, blank=True)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    branch = models.ForeignKey(Library_Branch, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
-        return f"{self.borrower_name} borrowed {self.book} on {self.loan_date}"
+        return f"{self.borrower_name} borrowed {self.book} from {self.branch} on {self.loan_date}"

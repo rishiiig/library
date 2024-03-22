@@ -48,6 +48,7 @@
     <button onclick="redirectToPage2()">Go to Book Page</button>
     <button onclick="redirectToPage3()">Lend Book</button>
     <button onclick="redirectToPage4()">View Data</button>
+    <button onclick="redirectToPage5()">View Borrowers</button>
 
     <script>
         function redirectToPage() {
@@ -61,6 +62,9 @@
         }
         function redirectToPage4() {
             window.location.href = "{% url 'view' %}";
+        }
+        function redirectToPage5() {
+            window.location.href = "{% url 'view_borrowers' %}";
         }
     </script>
 

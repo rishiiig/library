@@ -141,12 +141,14 @@ def borrow(request):
         book = Book.objects.filter(id=book_id, branch_id=branch_id).first()
 
         if book and book.num_copies > 0:
+            branch = Library_Branch.objects.get(pk=branch_id)
             borrower = Borrower.objects.create(
                 borrower_name=borrower_name,
                 borrower_number=borrower_number,
                 loan_date=loan_date,
                 return_date=return_date,
-                book=book
+                book=book,
+                branch=branch
             )
             borrower.save()
 
@@ -164,29 +166,29 @@ def borrow(request):
         return render(request, 'borrow.html', {'branches': branches})
 
 # def lend_book(request):
-#     if request.method == 'POST':
-#         branch_id = request.POST.get('branch')
-#         book_id = request.POST.get('book')
-#         borrower_name = request.POST.get('borrower_name')
-#         borrower_number = request.POST.get('borrower_number')
-#         loan_date = request.POST.get('loan_date')
-#         return_date = request.POST.get('return_date')
+    if request.method == 'POST':
+        branch_id = request.POST.get('branch')
+        book_id = request.POST.get('book')
+        borrower_name = request.POST.get('borrower_name')
+        borrower_number = request.POST.get('borrower_number')
+        loan_date = request.POST.get('loan_date')
+        return_date = request.POST.get('return_date')
 
-#         book = Book.objects.get(pk=book_id)
+        book = Book.objects.get(pk=book_id)
 
-#         borrower = Borrower.objects.create(
-#             borrower_name=borrower_name,
-#             borrower_number=borrower_number,
-#             loan_date=loan_date,
-#             return_date=return_date,
-#             book=book
-#         )
-#         borrower.save()
+        borrower = Borrower.objects.create(
+            borrower_name=borrower_name,
+            borrower_number=borrower_number,
+            loan_date=loan_date,
+            return_date=return_date,
+            book=book
+        )
+        borrower.save()
 
-#         return redirect('lend_book')
-#     else:
-#         branches = Library_Branch.objects.all()
-#         return render(request, 'lend_book.html', {'branches': branches})
+        return redirect('lend_book')
+    else:
+        branches = Library_Branch.objects.all()
+        return render(request, 'lend_book.html', {'branches': branches})
 
 def get_books(request):
     branch_id = request.GET.get('branch_id')
@@ -207,3 +209,10 @@ def view(request):
         'books': books,
         'borrowers': borrowers }
         )
+
+def view_borrowers(request):
+    borrowers = Borrower.objects.all()
+
+    return render(request, 'view_borrowers.html', {
+        'borrowers': borrowers
+    })
