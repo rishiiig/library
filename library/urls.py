@@ -24,5 +24,6 @@ urlpatterns = [
     path('add_data/', add_data, name='add_data'),
     path('add_book/', add_book, name='add_book'),
     path('borrow/', borrow, name='borrow'),
-    path('get_books/', get_books, name='get_books')
+    path('get_books/', get_books, name='get_books'),
+    path('view/', view, name='view')
 ]

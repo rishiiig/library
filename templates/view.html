@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Data</title>
+</head>
+<body>
+    <button onclick="redirectToPage()">Library</button>
+
+    <h1>Book Authors</h1>
+    <table border="1">
+        <tr>
+            <th>Author Name</th>
+        </tr>
+        {% for author in authors %}
+        <tr>
+            <td>{{ author.author_name }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h1>Book Publishers</h1>
+    <table border="1">
+        <tr>
+            <th>Publisher Name</th>
+            <th>Publisher Number</th>
+            <th>Publisher Address</th>
+        </tr>
+        {% for publisher in publishers %}
+        <tr>
+            <td>{{ publisher.publisher_name }}</td>
+            <td>{{ publisher.publisher_number }}</td>
+            <td>{{ publisher.pubilsher_address }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h1>Library Branches</h1>
+    <table border="1">
+        <tr>
+            <th>Branch Name</th>
+            <th>Location</th>
+        </tr>
+        {% for branch in branches %}
+        <tr>
+            <td>{{ branch.branch_name }}</td>
+            <td>{{ branch.location }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h1>Books</h1>
+    <table border="1">
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Publisher</th>
+            <th>Branch</th>
+            <th>Published Year</th>
+            <th>Number of Copies</th>
+        </tr>
+        {% for book in books %}
+        <tr>
+            <td>{{ book.title }}</td>
+            <td>{{ book.author.author_name }}</td>
+            <td>{{ book.publisher.publisher_name }}</td>
+            <td>{{ book.branch.branch_name }}</td>
+            <td>{{ book.published_year }}</td>
+            <td>{{ book.num_copies }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h1>Borrowers</h1>
+    <table border="1">
+        <tr>
+            <th>Borrower Name</th>
+            <th>Borrower Number</th>
+            <th>Loan Date</th>
+            <th>Return Date</th>
+            <th>Book</th>
+        </tr>
+        {% for borrower in borrowers %}
+        <tr>
+            <td>{{ borrower.borrower_name }}</td>
+            <td>{{ borrower.borrower_number }}</td>
+            <td>{{ borrower.loan_date }}</td>
+            <td>{{ borrower.return_date }}</td>
+            <td>{{ borrower.book.title }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <script>
+            function redirectToPage() {
+                window.location.href = "{% url 'default' %}";
+            }
+    </script>
+</body>
+</html>

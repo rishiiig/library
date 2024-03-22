@@ -20,7 +20,7 @@
 
             <!-- Add Book -->
             <label for="title">Book Title:</label>
-            <input type="text" name="title" placeholder="Book Title"> <br> <br>
+            <input type="text" name="title" placeholder="Book Title" required> <br> <br>
 
             <!-- Add Author -->
             <label for="author">Book Author:</label>
@@ -30,7 +30,7 @@
                 <option value="{{ author.id }}" data-author_name="{{ author.author_name }}">{{ author.author_name }}</option>
                 {% endfor %}
             </select>
-            <input type="text" name="new_author" id="new_author" placeholder="Add New Author"> <br> <br>
+            <input type="text" name="new_author" id="new_author" placeholder="Add New Author" required> <br> <br>
 
             <!-- Add Publisher -->
             <label for="publisher_name">Publisher Name:</label>
@@ -42,16 +42,16 @@
                     {{ publisher.publisher_name }}</option>
                 {% endfor %}
             </select>
-            <input type="text" name="new_publisher_name" id="new_publisher_name" placeholder="New Publisher Name"> <br>
+            <input type="text" name="new_publisher_name" id="new_publisher_name" placeholder="New Publisher Name" required> <br>
             <br>
 
             <label for="publisher_number">Publisher Number:</label>
             <input type="number" name="new_publisher_number" id="new_publisher_number"
-                placeholder="New Publisher Number"> <br> <br>
+                placeholder="New Publisher Number" required> <br> <br>
 
             <label for="publisher_address">Publisher Address:</label>
             <input type="text" name="new_publisher_address" id="new_publisher_address"
-                placeholder="New Publisher Address"> <br> <br>
+                placeholder="New Publisher Address" required> <br> <br>
 
             <!-- Add Branch -->
             <label for="branch">Branch:</label>
@@ -61,16 +61,16 @@
                 <option value="{{ branch.id }}" data-branch_name="{{ branch.branch_name }}" data-location="{{ branch.location }}">{{ branch.branch_name }}</option>
                 {% endfor %}
             </select>
-            <input type="text" name="new_branch" id="new_branch" placeholder="Add New Branch">
-            <input type="text" name="new_location" id="new_location" placeholder="Add New Location"> <br> <br>
+            <input type="text" name="new_branch" id="new_branch" placeholder="Add New Branch" required>
+            <input type="text" name="new_location" id="new_location" placeholder="Add New Location" required> <br> <br>
 
             <!-- Add Published Year-->
             <label for="published_year">Published Year:</label>
-            <input type="number" name="published_year" id="published_year" placeholder="Year"> <br> <br>
+            <input type="number" name="published_year" id="published_year" placeholder="Year" required> <br> <br>
 
             <!-- Add Copies -->
             <label for="num_copies">Number of Copies:</label>
-            <input type="number" name="num_copies" placeholder="Number of Copies"> <br> <br>
+            <input type="number" name="num_copies" placeholder="Number of Copies" required> <br> <br>
 
             <button type="submit">Submit</button>
         </form>

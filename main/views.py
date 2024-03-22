@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .models import *
 from django.utils import timezone
 from django.http import JsonResponse
+from django.contrib import messages
 
 # Create your views here.
 
@@ -58,8 +59,7 @@ def add_data(request):
         borrower = Borrower.objects.create(borrower_name=borrower_name, contact_info=contact_info, loan_date=loan_date, return_date=return_date, book=book)
         
         # Redirect to a success page or the same page (for another entry)
-        # return redirect('success_page')  # Redirect to a success page
-        return redirect('add_data')  # Redirect to the same page for another entry
+        return redirect('add_data')
 
     else:
         # Fetch existing data for dropdowns
@@ -118,8 +118,8 @@ def add_book(request):
         # Saving Book
         book = Book.objects.create(title=title, author=author, publisher=publisher, branch=branch, 
                                    published_year=published_year, num_copies=num_copies)
-        
-        return redirect('add_book')  # Redirecting to the same page after form submission
+
+        return redirect('add_book')
 
     # Fetching data to populate dropdowns
     authors = Book_Author.objects.all()
@@ -137,132 +137,73 @@ def borrow(request):
         loan_date = request.POST.get('loan_date')
         return_date = request.POST.get('return_date')
 
-        book = Book.objects.get(pk=book_id)
-        
-        borrower = Borrower.objects.create(
-            borrower_name=borrower_name,
-            borrower_number=borrower_number,
-            loan_date=loan_date,
-            return_date=return_date,
-            book=book
-        )
-        borrower.save()
-        
-        return redirect('borrow')
+        # book = Book.objects.get(pk=book_id)
+        book = Book.objects.filter(id=book_id, branch_id=branch_id).first()
+
+        if book and book.num_copies > 0:
+            borrower = Borrower.objects.create(
+                borrower_name=borrower_name,
+                borrower_number=borrower_number,
+                loan_date=loan_date,
+                return_date=return_date,
+                book=book
+            )
+            borrower.save()
+
+            # Update the number of copies
+            book.num_copies -= 1
+            book.save()
+
+            return redirect('borrow')
+        else:
+            messages.error(request, 'No copies of this book are available at the selected branch')
+            return redirect('borrow')
 
     else:
         branches = Library_Branch.objects.all()
         return render(request, 'borrow.html', {'branches': branches})
 
-def lend_book(request):
-    if request.method == 'POST':
-        branch_id = request.POST.get('branch')
-        book_id = request.POST.get('book')
-        borrower_name = request.POST.get('borrower_name')
-        borrower_number = request.POST.get('borrower_number')
-        loan_date = request.POST.get('loan_date')
-        return_date = request.POST.get('return_date')
+# def lend_book(request):
+#     if request.method == 'POST':
+#         branch_id = request.POST.get('branch')
+#         book_id = request.POST.get('book')
+#         borrower_name = request.POST.get('borrower_name')
+#         borrower_number = request.POST.get('borrower_number')
+#         loan_date = request.POST.get('loan_date')
+#         return_date = request.POST.get('return_date')
 
-        book = Book.objects.get(pk=book_id)
-        
-        borrower = Borrower.objects.create(
-            borrower_name=borrower_name,
-            borrower_number=borrower_number,
-            loan_date=loan_date,
-            return_date=return_date,
-            book=book
-        )
-        borrower.save()
-        
-        return redirect('lend_book')  # Redirect to the lending page after submission
-    else:
-        branches = Library_Branch.objects.all()
-        return render(request, 'lend_book.html', {'branches': branches})
+#         book = Book.objects.get(pk=book_id)
+
+#         borrower = Borrower.objects.create(
+#             borrower_name=borrower_name,
+#             borrower_number=borrower_number,
+#             loan_date=loan_date,
+#             return_date=return_date,
+#             book=book
+#         )
+#         borrower.save()
+
+#         return redirect('lend_book')
+#     else:
+#         branches = Library_Branch.objects.all()
+#         return render(request, 'lend_book.html', {'branches': branches})
 
 def get_books(request):
     branch_id = request.GET.get('branch_id')
     books = Book.objects.filter(branch_id=branch_id).values('id', 'title')
     return JsonResponse(list(books), safe=False)
 
+def view(request):
+    authors = Book_Author.objects.all()
+    publishers = Book_Publisher.objects.all()
+    branches = Library_Branch.objects.all()
+    books = Book.objects.all()
+    borrowers = Borrower.objects.all()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# def add_book(request):
-#     if request.method == 'POST':
-#         title = request.POST.get('title')
-#         author_id = request.POST.get('author')
-#         new_author_name = request.POST.get('new_author')
-#         publisher_id = request.POST.get('publisher_name')
-#         new_publisher_name = request.POST.get('new_publisher_name')
-#         new_publisher_number = request.POST.get('new_publisher_number')
-#         new_publisher_address = request.POST.get('new_publisher_address')
-#         branch_id = request.POST.get('branch')
-#         new_branch_name = request.POST.get('new_branch')
-#         new_location = request.POST.get('new_location')
-#         num_copies = request.POST.get('num_copies')
-
-#         # Check if the author already exists or create a new one
-#         if author_id:
-#             author = Book_Author.objects.get(id=author_id)
-#         elif new_author_name:
-#             author = Book_Author.objects.create(author_name=new_author_name)
-#         else:
-#             return redirect('add_book')
-
-#         # Check if the publisher already exists or create a new one
-#         if publisher_id:
-#             publisher = Book_Publisher.objects.get(id=publisher_id)
-#         elif new_publisher_name:
-#             publisher = Book_Publisher.objects.create(publisher_name=new_publisher_name,
-#                                                       publisher_number=new_publisher_number,
-#                                                       pubilsher_address=new_publisher_address)
-#         else:
-#             return redirect('add_book')
-
-#         # Check if the branch already exists or create a new one
-#         if branch_id:
-#             branch = Library_Branch.objects.get(id=branch_id)
-#         elif new_branch_name:
-#             branch = Library_Branch.objects.create(branch_name=new_branch_name,
-#                                                    location=new_location)
-#         else:
-#             return redirect('add_book')
-
-#         # Create the book record
-#         book = Book.objects.create(title=title,
-#                                    author=author,
-#                                    publisher=publisher,
-#                                    branch=branch,
-#                                    publisher_year=timezone.now().year,
-#                                    num_copies=num_copies)
-#         return redirect('add_book.html')
-
-#     # If it's a GET request, render the form
-#     authors = Book_Author.objects.all()
-#     publishers = Book_Publisher.objects.all()
-#     branches = Library_Branch.objects.all()
-#     return render(request, 'add_book.html', {'authors': authors, 'publishers': publishers, 'branches': branches})
-
+    return render(request, 'view.html', {
+        'authors': authors,
+        'publishers': publishers,
+        'branches': branches,
+        'books': books,
+        'borrowers': borrowers }
+        )
