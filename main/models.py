@@ -46,7 +46,7 @@ class Book(models.Model):
     num_copies = models.IntegerField(default=1, validators=[MinValueValidator(0)])
 
     def __str__(self):
-        return self.title
+        return f" {self.title} in {self.branch} branch"
 
 class Borrower(models.Model):
     borrower_name = models.CharField(max_length=30)

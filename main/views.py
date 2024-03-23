@@ -3,6 +3,7 @@ from .models import *
 from django.utils import timezone
 from django.http import JsonResponse
 from django.contrib import messages
+from django.utils import timezone
 
 # Create your views here.
 
@@ -165,31 +166,6 @@ def borrow(request):
         branches = Library_Branch.objects.all()
         return render(request, 'borrow.html', {'branches': branches})
 
-# def lend_book(request):
-    if request.method == 'POST':
-        branch_id = request.POST.get('branch')
-        book_id = request.POST.get('book')
-        borrower_name = request.POST.get('borrower_name')
-        borrower_number = request.POST.get('borrower_number')
-        loan_date = request.POST.get('loan_date')
-        return_date = request.POST.get('return_date')
-
-        book = Book.objects.get(pk=book_id)
-
-        borrower = Borrower.objects.create(
-            borrower_name=borrower_name,
-            borrower_number=borrower_number,
-            loan_date=loan_date,
-            return_date=return_date,
-            book=book
-        )
-        borrower.save()
-
-        return redirect('lend_book')
-    else:
-        branches = Library_Branch.objects.all()
-        return render(request, 'lend_book.html', {'branches': branches})
-
 def get_books(request):
     branch_id = request.GET.get('branch_id')
     books = Book.objects.filter(branch_id=branch_id).values('id', 'title')
@@ -212,7 +188,30 @@ def view(request):
 
 def view_borrowers(request):
     borrowers = Borrower.objects.all()
+    current_date = timezone.now().date()  # Get current date in server's timezone
 
     return render(request, 'view_borrowers.html', {
-        'borrowers': borrowers
+        'borrowers': borrowers,
+        'current_date': current_date,  # Pass current date to the template
     })
+
+def receive_book(request, borrower_id):
+    if request.method == 'POST':
+        try:
+            borrower = Borrower.objects.get(pk=borrower_id)
+            book = borrower.book
+
+            # Deleting the borrower record
+            borrower.delete()
+
+            # Increasing the book count for the branch
+            book.num_copies += 1
+            book.save()
+
+            return redirect('view_borrowers')
+
+        except Borrower.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Borrower not found'})
+
+    else:
+        return JsonResponse({'success': False, 'error': 'Invalid request method'})

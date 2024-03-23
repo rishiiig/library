@@ -26,5 +26,6 @@ urlpatterns = [
     path('borrow/', borrow, name='borrow'),
     path('get_books/', get_books, name='get_books'),
     path('view/', view, name='view'),
-    path('view_borrowers/', view_borrowers, name='view_borrowers')
+    path('view_borrowers/', view_borrowers, name='view_borrowers'),
+    path('receive_book/<int:borrower_id>/', receive_book, name='receive_book')
 ]

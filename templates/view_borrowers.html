@@ -38,10 +38,99 @@
         .filterable .filters input[disabled]:-ms-input-placeholder {
             color: #333;
         }
+
+        .button-8.red {
+            background-color: #ffcccc;
+            border-color: #ff6666;
+            color: #cc0000;
+        }
+
+        .button-8.red:hover,
+        .button-8.red:focus {
+            background-color: #ff9999;
+            border-color: #ff3333;
+            color: #660000;
+        }
+
+        .button-8.red:focus {
+            box-shadow: 0 0 0 4px rgba(255, 102, 102, 0.15);
+        }
+
+        .button-8.red:active {
+            background-color: #ff8080;
+            border-color: #ff1a1a;
+            color: #660000;
+        }
+
+        .button-8.green {
+            background-color: #ccffcc;
+            border-color: #66ff66;
+            color: #009900;
+        }
+
+        .button-8.green:hover,
+        .button-8.green:focus {
+            background-color: #99ff99;
+            border-color: #33ff33;
+            color: #006600;
+        }
+
+        .button-8.green:focus {
+            box-shadow: 0 0 0 4px rgba(102, 255, 102, 0.15);
+        }
+
+        .button-8.green:active {
+            background-color: #80ff80;
+            border-color: #1aff1a;
+            color: #006600;
+        }
+
+
+        .button-8 {
+            background-color: #e1ecf4;
+            border-radius: 3px;
+            border: 1px solid #7aa7c7;
+            box-shadow: rgba(255, 255, 255, .7) 0 1px 0 0 inset;
+            box-sizing: border-box;
+            color: #39739d;
+            cursor: pointer;
+            display: inline-block;
+            font-family: -apple-system, system-ui, "Segoe UI", "Liberation Sans", sans-serif;
+            font-weight: 400;
+            line-height: 1.15385;
+            margin: 0;
+            outline: none;
+            position: relative;
+            text-align: center;
+            text-decoration: none;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            vertical-align: baseline;
+            white-space: nowrap;
+        }
+
+        .button-8:hover,
+        .button-8:focus {
+            background-color: #b3d3ea;
+            color: #2c5777;
+        }
+
+        .button-8:focus {
+            box-shadow: 0 0 0 4px rgba(0, 149, 255, .15);
+        }
+
+        .button-8:active {
+            background-color: #a0c7e4;
+            box-shadow: none;
+            color: #2c5777;
+        }
     </style>
 </head>
 
 <body>
+    <button onclick="redirectToPage()">Library</button>
+
     <div class="container">
         <h3>Borrowers</h3>
         <hr>
@@ -54,32 +143,52 @@
                                 class="glyphicon glyphicon-filter"></span> Filter</button>
                     </div>
                 </div>
-                <table class="table">
-                    <thead>
-                        <tr class="filters">
-                            <!-- <th><input type="text" class="form-control" placeholder="#" disabled></th> -->
-                            <th><input type="text" class="form-control" placeholder="Name" disabled></th>
-                            <th><input type="text" class="form-control" placeholder="Number" disabled></th>
-                            <th><input type="text" class="form-control" placeholder="Book" disabled></th>
-                            <th><input type="text" class="form-control" placeholder="Branch" disabled></th>
-                            <th><input type="text" class="form-control" placeholder="Loan Date" disabled></th>
-                            <th><input type="text" class="form-control" placeholder="Return Date" disabled></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for borrower in borrowers %}
-                        <tr>
-                            <!-- <td>{{ forloop.counter }}</td> -->
-                            <td>{{ borrower.borrower_name }}</td>
-                            <td>{{ borrower.borrower_number }}</td>
-                            <td>{{ borrower.book.title }}</td>
-                            <td>{{ borrower.branch.branch_name }}</td>
-                            <td>{{ borrower.loan_date }}</td>
-                            <td>{{ borrower.return_date }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                <div style="min-height: auto; max-height: 400px; overflow-y: auto;">
+                    <table class="table">
+                        <thead>
+                            <tr class="filters">
+                                <!-- <th><input type="text" class="form-control" placeholder="#" disabled></th> -->
+                                <th><input type="text" class="form-control" placeholder="Name" disabled></th>
+                                <th><input type="text" class="form-control" placeholder="Number" disabled></th>
+                                <th><input type="text" class="form-control" placeholder="Book" disabled></th>
+                                <th><input type="text" class="form-control" placeholder="Branch" disabled></th>
+                                <th><input type="text" class="form-control" placeholder="Loan Date" disabled></th>
+                                <th><input type="text" class="form-control" placeholder="Return Date" disabled></th>
+                                <th><input type="text" class="form-control" placeholder="Status" disabled></th>
+                                <th>Edit</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for borrower in borrowers %}
+                            <tr>
+                                <!-- <td>{{ forloop.counter }}</td> -->
+                                <td>{{ borrower.borrower_name }}</td>
+                                <td>{{ borrower.borrower_number }}</td>
+                                <td>{{ borrower.book.title }}</td>
+                                <td>{{ borrower.branch.branch_name }}</td>
+                                <td>{{ borrower.loan_date }}</td>
+                                <td>{{ borrower.return_date }}</td>
+                                <td>
+                                    {% if borrower.return_date > current_date %}
+                                    <button class="button-8 green" disabled>Under Due</button>
+                                    <!-- <button class="btn btn-success btn-sm" disabled>Under Due</button> -->
+                                    {% else %}
+                                    <button class="button-8 red" disabled>Overdue</button>
+                                    <!-- <button class="btn btn-danger btn-sm" disabled>Overdue</button> -->
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <form action="{% url 'receive_book' borrower.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <button type="submit">Receive</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
             </div>
         </div>
     </div>
@@ -128,6 +237,10 @@
                 }
             });
         });
+
+        function redirectToPage() {
+            window.location.href = "{% url 'default' %}";
+        }
     </script>
 
 </body>
